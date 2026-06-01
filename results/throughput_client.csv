@@ -1,0 +1,187 @@
+mode,side,buf_kb,num_buf,T_gbps,S_calls_s,M_gbps,p50_us,p99_us,cpu_pct
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 64 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=false)...
+[Client] Warmup done, measuring...
+tcp-blocking,client,64,64,4.271,8146,0.534,0.0,0.0,3.3
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 64 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] MSG_ZEROCOPY enabled.
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=true)...
+[Client] Warmup done, measuring...
+tcp-zerocopy,client,64,64,3.820,7286,0.477,0.0,0.0,3.4
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 256 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=false)...
+[Client] Warmup done, measuring...
+tcp-blocking,client,256,64,3.916,1868,0.490,0.0,0.0,2.8
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 256 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] MSG_ZEROCOPY enabled.
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=true)...
+[Client] Warmup done, measuring...
+tcp-zerocopy,client,256,64,3.912,1865,0.489,0.0,0.0,3.2
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=false)...
+[Client] Warmup done, measuring...
+tcp-blocking,client,1024,64,3.987,475,0.498,0.0,0.0,3.0
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] MSG_ZEROCOPY enabled.
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=true)...
+[Client] Warmup done, measuring...
+tcp-zerocopy,client,1024,64,3.775,450,0.472,0.0,0.0,3.3
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 4096 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=false)...
+[Client] Warmup done, measuring...
+tcp-blocking,client,4096,64,4.437,132,0.555,0.0,0.0,3.1
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 4096 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] MSG_ZEROCOPY enabled.
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=true)...
+[Client] Warmup done, measuring...
+tcp-zerocopy,client,4096,64,3.473,104,0.434,0.0,0.0,3.7
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 16384 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=false)...
+[Client] Warmup done, measuring...
+tcp-blocking,client,16384,64,3.679,27,0.460,0.0,0.0,2.8
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 16384 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] MSG_ZEROCOPY enabled.
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=true)...
+[Client] Warmup done, measuring...
+tcp-zerocopy,client,16384,64,3.639,27,0.455,0.0,0.0,2.9
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 65536 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=false)...
+[Client] Warmup done, measuring...
+tcp-blocking,client,65536,64,3.835,7,0.479,0.0,0.0,2.9
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5556
+  buffer_size   : 65536 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Client] Connecting to 192.168.88.25:5556...
+[Client] MSG_ZEROCOPY enabled.
+[Client] Sending (warmup=2.0s, measure=10.0s, zero_copy=true)...
+[Client] Warmup done, measuring...
+tcp-zerocopy,client,65536,64,3.948,7,0.493,0.0,0.0,3.4

@@ -1,0 +1,15 @@
+mode,side,buf_kb,num_buf,T_gbps,S_calls_s,M_gbps,p50_us,p99_us,cpu_pct
+==========================================
+   TCP/IP Benchmark — Client
+==========================================
+  server_addr   : 192.168.88.25
+  port          : 5557
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : true
+[Client] Connecting to 192.168.88.25:5557...
+[Client] Ping-pong: 10000 iterations, ping_size=65536 B...
+tcp-blocking,client,1024,64,0.000,0,0.000,155.2,427.5,0.0

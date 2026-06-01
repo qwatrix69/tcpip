@@ -1,0 +1,80 @@
+mode,side,buf_kb,num_buf,T_gbps,S_calls_s,M_gbps,p50_us,p99_us,cpu_pct
+==========================================
+   TCP/IP Multi-Channel Benchmark — Client
+==========================================
+  channels      : 1
+  server_addr   : 192.168.88.25
+  port          : 5558
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Launching 1 sender threads...
+
+── Per-channel results ──
+  channel 0: 4.02 Gbit/s (4792 MB)
+tcp-multi,client,1024,1,4.020,479,0.502,0.0,0.0,3.1
+==========================================
+   TCP/IP Multi-Channel Benchmark — Client
+==========================================
+  channels      : 2
+  server_addr   : 192.168.88.25
+  port          : 5558
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Launching 2 sender threads...
+
+── Per-channel results ──
+  channel 0: 4.18 Gbit/s (4986 MB)
+  channel 1: 3.99 Gbit/s (4758 MB)
+tcp-multi,client,1024,2,8.174,974,1.022,0.0,0.0,5.1
+==========================================
+   TCP/IP Multi-Channel Benchmark — Client
+==========================================
+  channels      : 4
+  server_addr   : 192.168.88.25
+  port          : 5558
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Launching 4 sender threads...
+
+── Per-channel results ──
+  channel 0: 3.18 Gbit/s (3790 MB)
+  channel 1: 3.11 Gbit/s (3704 MB)
+  channel 2: 3.92 Gbit/s (4672 MB)
+  channel 3: 3.81 Gbit/s (4538 MB)
+tcp-multi,client,1024,4,14.012,1670,1.752,0.0,0.0,8.2
+==========================================
+   TCP/IP Multi-Channel Benchmark — Client
+==========================================
+  channels      : 8
+  server_addr   : 192.168.88.25
+  port          : 5558
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Client] Launching 8 sender threads...
+
+── Per-channel results ──
+  channel 0: 3.30 Gbit/s (3935 MB)
+  channel 1: 3.80 Gbit/s (4535 MB)
+  channel 2: 3.04 Gbit/s (3626 MB)
+  channel 3: 3.64 Gbit/s (4337 MB)
+  channel 4: 3.56 Gbit/s (4248 MB)
+  channel 5: 3.10 Gbit/s (3697 MB)
+  channel 6: 3.54 Gbit/s (4218 MB)
+  channel 7: 3.66 Gbit/s (4368 MB)
+tcp-multi,client,1024,8,27.652,3296,3.457,0.0,0.0,15.1
