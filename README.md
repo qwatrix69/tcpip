@@ -137,25 +137,47 @@ cmake --build build -j
 
 ## Сравнение с Inflare
 
+Сторона Inflare сама печатает CSV в идентичном формате:
+- `sample_rdma_server` — строка `CSV: rdma,server,…` с 11-й колонкой `eta_pct`
+  (метрика 6, КПД конвейера — берётся через публичный `RdmaStreamServer::PipelineEfficiency()`);
+- `sample_rdma_latency` — строка `CSV: rdma,client,…` с `p50_us`/`p99_us`
+  (метрика 2, через `RdmaStreamClient::LatencySamples()`).
+
+`compare.py` понимает оба формата: голые CSV-строки TCP-бенчмарка и строки
+RDMA-сэмплов с префиксом `CSV:` (лишние лог-строки игнорируются).
+
 После прогона обоих стендов сведите результаты:
 
 ```bash
-# пропускная способность и загрузка CPU (серии А/В/Г):
+# пропускная способность, CPU, η (серии А/В/Г):
 python3 scripts/compare.py \
     --tcp  results/throughput_client.csv \
-    --rdma results/rdma_throughput.csv \
+    --rdma results/rdma_server.csv \
     --out  results/comparison
 
-# с масштабируемостью (серия Д):
+# полное сведение (+ задержка метрика 2, + масштабируемость серия Д):
 python3 scripts/compare.py \
-    --tcp          results/throughput_client.csv \
-    --rdma         results/rdma_throughput.csv \
-    --scaling      results/scaling_client.csv \
-    --rdma-scaling results/rdma_chain.csv \
-    --out          results/comparison
+    --tcp           results/throughput_client.csv \
+    --rdma          results/rdma_server.csv \
+    --tcp-latency   results/latency_client.csv \
+    --rdma-latency  results/rdma_latency.csv \
+    --scaling       results/scaling_client.csv \
+    --rdma-scaling  results/rdma_chain.csv \
+    --out           results/comparison
 ```
 
-Скрипт печатает сравнительную таблицу и строит графики:
+Где взять RDMA-CSV (на стенде с DOCA):
+
+```bash
+# метрики 1,3,4,5,6 — сервер печатает CSV-строку в конце измерения:
+./sample_rdma_server | grep '^CSV:' > results/rdma_server.csv
+
+# метрика 2 — отдельный сэмпл латентности (p50/p99/p999):
+./sample_rdma_latency | grep '^CSV:' > results/rdma_latency.csv
+```
+
+Скрипт печатает сравнительную таблицу (с колонкой `eta_R`), таблицу задержек
+и строит графики:
 - `comparison_throughput.png` — пропускная способность от размера буфера
 - `comparison_cpu.png` — загрузка CPU
 - `comparison_scaling.png` — масштабируемость T от числа каналов (серия Д)

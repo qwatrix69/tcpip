@@ -17,20 +17,58 @@ import os
 import sys
 
 
+# Позиционные имена колонок. 11-я (eta_pct) опциональна — её печатает только
+# RDMA-сервер (метрика 6); у TCP она отсутствует.
+COLUMNS = ["mode", "side", "buf_kb", "num_buf", "T_gbps", "S_calls_s",
+           "M_gbps", "p50_us", "p99_us", "cpu_pct", "eta_pct"]
+INT_COLS = {"buf_kb", "num_buf"}
+KNOWN_MODES = {"tcp-blocking", "tcp-zerocopy", "tcp-multi", "tcp-multi-zc", "rdma"}
+
+
+def _parse_row(fields):
+    """Преобразует список строковых полей в dict по позициям COLUMNS."""
+    row = {}
+    for i, name in enumerate(COLUMNS):
+        if i < len(fields):
+            val = fields[i].strip()
+            if name in ("mode", "side"):
+                row[name] = val
+            elif name in INT_COLS:
+                row[name] = int(float(val))
+            else:
+                row[name] = float(val)
+        else:
+            # отсутствующие колонки (например eta_pct у TCP)
+            row[name] = "" if name in ("mode", "side") else 0.0
+    return row
+
+
 def read_csv(path):
+    """Толерантный парсер: понимает голые CSV-строки, строки с префиксом
+    'CSV:' (как печатают RDMA-сэмплы) и игнорирует заголовки/логи."""
     if not os.path.exists(path):
         print(f"WARN: файл не найден: {path}", file=sys.stderr)
         return []
     rows = []
-    with open(path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            # приводим числовые поля
-            for k in ("buf_kb", "num_buf"):
-                row[k] = int(float(row[k]))
-            for k in ("T_gbps", "S_calls_s", "M_gbps", "p50_us", "p99_us", "cpu_pct"):
-                row[k] = float(row[k])
-            rows.append(row)
+    with open(path, encoding="utf-8") as f:
+        for raw in f:
+            line = raw.strip()
+            if not line:
+                continue
+            # снять префикс 'CSV:' если есть
+            if line.startswith("CSV:"):
+                line = line[len("CSV:"):].strip()
+            # пропустить заголовок
+            if line.startswith("mode,"):
+                continue
+            fields = [x.strip() for x in line.split(",")]
+            # валидируем: первое поле — известный режим, минимум 10 колонок
+            if len(fields) < 10 or fields[0] not in KNOWN_MODES:
+                continue
+            try:
+                rows.append(_parse_row(fields))
+            except (ValueError, IndexError):
+                continue
     return rows
 
 
@@ -51,9 +89,9 @@ def print_comparison_table(tcp_rows, rdma_rows):
 
     header = f"{'buf(KB)':>8} | {'T_RDMA':>8} {'T_TCP':>8} {'×':>5} | " \
              f"{'CPU_R':>6} {'CPU_T':>6} | {'S_RDMA':>7} {'S_TCP':>8} | " \
-             f"{'M_RDMA':>7} {'M_TCP':>7}"
+             f"{'M_RDMA':>7} {'M_TCP':>7} | {'eta_R':>6}"
     print(header)
-    print("-" * 92)
+    print("-" * 100)
 
     for kb in buf_sizes:
         r = next((rdma[k] for k in rdma if k[1] == kb), None)
@@ -70,19 +108,36 @@ def print_comparison_table(tcp_rows, rdma_rows):
         s_t = t["S_calls_s"] if t else 0.0
         m_r = r["M_gbps"] if r else 0.0
         m_t = t["M_gbps"] if t else 0.0
+        eta_r = r.get("eta_pct", 0.0) if r else 0.0
 
         print(f"{kb:>8} | {T_r:>8.2f} {T_t:>8.2f} {ratio:>5.1f} | "
               f"{cpu_r:>6.1f} {cpu_t:>6.1f} | {s_r:>7.0f} {s_t:>8.0f} | "
-              f"{m_r:>7.2f} {m_t:>7.2f}")
+              f"{m_r:>7.2f} {m_t:>7.2f} | {eta_r:>6.1f}")
 
-    print("=" * 92)
+    print("=" * 100)
     print("T — пропускная способность (Гбит/с); × — превышение RDMA над TCP")
-    print("CPU — загрузка процессора (%); S — системные вызовы/с; M — память (ГБ/с)")
+    print("CPU — загрузка CPU (%); S — системные вызовы/с; M — память (ГБ/с)")
+    print("eta_R — КПД конвейера тройной буферизации RDMA (%, метрика 6, у TCP отсутствует)")
+
+
+def print_latency_table(tcp_lat_rows, rdma_lat_rows):
+    """Сравнение задержки (метрика 2): p50 / p99 для RDMA и TCP."""
+    if not tcp_lat_rows and not rdma_lat_rows:
+        return
+    print("\n" + "=" * 60)
+    print("ЗАДЕРЖКА (метрика 2) — p50 / p99, мкс")
+    print("=" * 60)
+    print(f"{'технология':>20} | {'p50, мкс':>10} | {'p99, мкс':>10}")
+    print("-" * 60)
+    for label, rows in (("RDMA (Inflare)", rdma_lat_rows), ("TCP/IP", tcp_lat_rows)):
+        for r in rows:
+            print(f"{label:>20} | {r['p50_us']:>10.2f} | {r['p99_us']:>10.2f}")
+    print("=" * 60)
 
 
 def write_merged_csv(tcp_rows, rdma_rows, out_path):
-    fields = ["mode", "side", "buf_kb", "num_buf",
-              "T_gbps", "S_calls_s", "M_gbps", "p50_us", "p99_us", "cpu_pct"]
+    fields = ["mode", "side", "buf_kb", "num_buf", "T_gbps", "S_calls_s",
+              "M_gbps", "p50_us", "p99_us", "cpu_pct", "eta_pct"]
     with open(out_path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
@@ -193,6 +248,8 @@ def main():
     ap.add_argument("--rdma", default="", help="CSV с RDMA-результатами (Inflare)")
     ap.add_argument("--scaling", default="", help="CSV TCP multi-channel (серия Д)")
     ap.add_argument("--rdma-scaling", default="", help="CSV RDMA chain (серия Д)")
+    ap.add_argument("--tcp-latency", default="", help="CSV TCP ping-pong (метрика 2)")
+    ap.add_argument("--rdma-latency", default="", help="CSV sample_rdma_latency (метрика 2)")
     ap.add_argument("--out", default="results/comparison", help="префикс выходных файлов")
     args = ap.parse_args()
 
@@ -204,6 +261,12 @@ def main():
         sys.exit(1)
 
     print_comparison_table(tcp_rows, rdma_rows)
+
+    # Метрика 2: задержка (отдельные ping-pong / latency прогоны)
+    if args.tcp_latency or args.rdma_latency:
+        tcp_lat = read_csv(args.tcp_latency) if args.tcp_latency else []
+        rdma_lat = read_csv(args.rdma_latency) if args.rdma_latency else []
+        print_latency_table(tcp_lat, rdma_lat)
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     write_merged_csv(tcp_rows, rdma_rows, f"{args.out}.csv")
