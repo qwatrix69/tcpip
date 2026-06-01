@@ -1,0 +1,193 @@
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 64 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:42900
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-blocking,server,64,64,4.271,8145,1.068,0.0,0.0,2.2
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 64 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:60876
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-zerocopy,server,64,64,3.820,7286,0.955,0.0,0.0,3.0
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 256 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:52312
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-blocking,server,256,64,3.916,1867,0.979,0.0,0.0,2.5
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 256 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:57544
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-zerocopy,server,256,64,3.912,1865,0.978,0.0,0.0,2.5
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:37928
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-blocking,server,1024,64,3.987,475,0.997,0.0,0.0,2.4
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 1024 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:46082
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-zerocopy,server,1024,64,3.775,450,0.944,0.0,0.0,6.5
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 4096 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:51478
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+[Server] Connection closed by client.
+tcp-blocking,server,4096,64,4.437,132,1.109,0.0,0.0,2.6
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 4096 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:33544
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-zerocopy,server,4096,64,3.473,104,0.868,0.0,0.0,2.4
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 16384 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:43314
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-blocking,server,16384,64,3.678,27,0.920,0.0,0.0,3.1
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 16384 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:46648
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-zerocopy,server,16384,64,3.639,27,0.910,0.0,0.0,2.4
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 65536 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : false
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:36142
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-blocking,server,65536,64,3.835,7,0.959,0.0,0.0,2.4
+==========================================
+   TCP/IP Benchmark — Server
+==========================================
+  server_addr   : 127.0.0.1
+  port          : 5556
+  buffer_size   : 65536 KiB
+  num_buffers   : 64
+  warmup        : 2.0 s
+  duration      : 10.0 s
+  zero_copy     : true
+  ping_pong     : false
+[Server] Listening on port 5556...
+[Server] Connection from 192.168.88.26:58926
+[Server] Receiving (warmup=2.0s, measure=10.0s)...
+[Server] Warmup done, measuring...
+tcp-zerocopy,server,65536,64,3.948,7,0.987,0.0,0.0,3.8
