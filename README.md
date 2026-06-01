@@ -30,11 +30,14 @@ tcpip/
 │   └── metrics.hpp           # структуры результатов, вывод (текст и CSV)
 ├── src/
 │   ├── tcp_server.cpp        # сервер: throughput + ping-pong echo
-│   └── tcp_client.cpp        # клиент: throughput + ping-pong + zero-copy
+│   ├── tcp_client.cpp        # клиент: throughput + ping-pong + zero-copy
+│   ├── tcp_server_multi.cpp  # многоканальный сервер (серия Д, аналог chain)
+│   └── tcp_client_multi.cpp  # многоканальный клиент (N параллельных соединений)
 └── scripts/
     ├── build.sh              # сборка через CMake + Ninja
     ├── run_throughput.sh     # серии А/В/Г: T, S, M, U при разных буферах
     ├── run_latency.sh        # серия Б: задержка RTT
+    ├── run_scaling.sh        # серия Д: масштабируемость 1/2/4/8 каналов
     └── compare.py            # сведение RDMA vs TCP, графики для ВКР
 ```
 
@@ -71,6 +74,34 @@ cmake --build build -j
 ./scripts/run_latency.sh client 192.168.1.2
 ```
 
+### Масштабируемость — серия Д (многоканальный режим)
+
+Аналог цепочки серверов Inflare (`RdmaStreamChain`): N параллельных соединений,
+каждое в своём потоке, совокупная пропускная способность агрегируется.
+Скрипт прогоняет 1, 2, 4, 8 каналов.
+
+```bash
+# сервер:
+./scripts/run_scaling.sh server
+# клиент:
+./scripts/run_scaling.sh client 192.168.1.2
+```
+
+Одиночный прогон с заданным числом каналов:
+
+```bash
+# сервер (4 канала):
+./build/tcp_bench_server_multi --port 5558 --channels 4 \
+    --buf-size 1048576 --duration 10
+
+# клиент (4 канала):
+./build/tcp_bench_client_multi --addr 192.168.1.2 --port 5558 --channels 4 \
+    --buf-size 1048576 --duration 10
+```
+
+В колонке `num_buf` итогового CSV для multi-channel хранится число каналов N —
+это позволяет `compare.py` построить график масштабируемости.
+
 ### Одиночный прогон вручную
 
 ```bash
@@ -101,6 +132,7 @@ cmake --build build -j
 | `--iters, -i` | итераций ping-pong | 10000 |
 | `--zero-copy, -z` | режим MSG_ZEROCOPY | off |
 | `--ping-pong, -l` | режим измерения задержки | off |
+| `--channels, -c` | число каналов (только multi) | 4 |
 | `--csv` | вывод в формате CSV | off |
 
 ## Сравнение с Inflare
@@ -108,14 +140,25 @@ cmake --build build -j
 После прогона обоих стендов сведите результаты:
 
 ```bash
+# пропускная способность и загрузка CPU (серии А/В/Г):
 python3 scripts/compare.py \
     --tcp  results/throughput_client.csv \
     --rdma results/rdma_throughput.csv \
     --out  results/comparison
+
+# с масштабируемостью (серия Д):
+python3 scripts/compare.py \
+    --tcp          results/throughput_client.csv \
+    --rdma         results/rdma_throughput.csv \
+    --scaling      results/scaling_client.csv \
+    --rdma-scaling results/rdma_chain.csv \
+    --out          results/comparison
 ```
 
-Скрипт печатает сравнительную таблицу и строит графики
-`comparison_throughput.png` и `comparison_cpu.png` для вставки в главу 4.
+Скрипт печатает сравнительную таблицу и строит графики:
+- `comparison_throughput.png` — пропускная способность от размера буфера
+- `comparison_cpu.png` — загрузка CPU
+- `comparison_scaling.png` — масштабируемость T от числа каналов (серия Д)
 
 ## Замечания по методологии
 

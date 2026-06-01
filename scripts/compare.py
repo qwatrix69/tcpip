@@ -143,10 +143,56 @@ def try_plot(tcp_rows, rdma_rows, out_prefix):
     print(f"График: {out_prefix}_cpu.png")
 
 
+def plot_scaling(scaling_rows, rdma_scaling_rows, out_prefix):
+    """График масштабируемости (серия Д): T_aggregate от числа каналов."""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        return
+
+    def series(rows):
+        # для multi-channel число каналов лежит в num_buf
+        pts = sorted([(r["num_buf"], r["T_gbps"]) for r in rows])
+        return [p[0] for p in pts], [p[1] for p in pts]
+
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    x_tcp, y_tcp = series(scaling_rows)
+    if x_tcp:
+        ax.plot(x_tcp, y_tcp, marker="o", label="TCP/IP (multi-channel)",
+                color="#c62828", linewidth=2)
+        # идеальная линейная линия от 1 канала
+        if y_tcp:
+            base = y_tcp[0]
+            ax.plot(x_tcp, [base * n for n in x_tcp], "--", color="#c62828",
+                    alpha=0.4, label="TCP идеальное (линейное)")
+
+    x_r, y_r = series(rdma_scaling_rows)
+    if x_r:
+        ax.plot(x_r, y_r, marker="s", label="RDMA (Inflare chain)",
+                color="#2e7d32", linewidth=2)
+        if y_r:
+            base_r = y_r[0]
+            ax.plot(x_r, [base_r * n for n in x_r], "--", color="#2e7d32",
+                    alpha=0.4, label="RDMA идеальное (линейное)")
+
+    ax.set_xlabel("Число каналов (N)")
+    ax.set_ylabel("Суммарная пропускная способность (Гбит/с)")
+    ax.set_title("Масштабируемость: TCP/IP и RDMA (серия Д)")
+    ax.grid(True, alpha=0.3)
+    ax.legend()
+    fig.savefig(f"{out_prefix}_scaling.png", dpi=200, bbox_inches="tight")
+    print(f"График: {out_prefix}_scaling.png")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Сравнение RDMA и TCP/IP метрик")
     ap.add_argument("--tcp", required=True, help="CSV с TCP-результатами")
     ap.add_argument("--rdma", default="", help="CSV с RDMA-результатами (Inflare)")
+    ap.add_argument("--scaling", default="", help="CSV TCP multi-channel (серия Д)")
+    ap.add_argument("--rdma-scaling", default="", help="CSV RDMA chain (серия Д)")
     ap.add_argument("--out", default="results/comparison", help="префикс выходных файлов")
     args = ap.parse_args()
 
@@ -162,6 +208,12 @@ def main():
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     write_merged_csv(tcp_rows, rdma_rows, f"{args.out}.csv")
     try_plot(tcp_rows, rdma_rows, args.out)
+
+    # Серия Д: масштабируемость
+    if args.scaling or args.rdma_scaling:
+        scaling_rows = read_csv(args.scaling) if args.scaling else []
+        rdma_scaling_rows = read_csv(args.rdma_scaling) if args.rdma_scaling else []
+        plot_scaling(scaling_rows, rdma_scaling_rows, args.out)
 
 
 if __name__ == "__main__":

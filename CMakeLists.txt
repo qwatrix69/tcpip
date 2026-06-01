@@ -26,8 +26,19 @@ add_executable(tcp_bench_client src/tcp_client.cpp)
 target_include_directories(tcp_bench_client PRIVATE ${TCPIP_INCLUDE_DIR})
 target_link_libraries(tcp_bench_client PRIVATE pthread)
 
+# ── Multi-channel server (серия Д — аналог server chain) ─────────────────────
+add_executable(tcp_bench_server_multi src/tcp_server_multi.cpp)
+target_include_directories(tcp_bench_server_multi PRIVATE ${TCPIP_INCLUDE_DIR})
+target_link_libraries(tcp_bench_server_multi PRIVATE pthread)
+
+# ── Multi-channel client ─────────────────────────────────────────────────────
+add_executable(tcp_bench_client_multi src/tcp_client_multi.cpp)
+target_include_directories(tcp_bench_client_multi PRIVATE ${TCPIP_INCLUDE_DIR})
+target_link_libraries(tcp_bench_client_multi PRIVATE pthread)
+
 # ── Install ──────────────────────────────────────────────────────────────────
 install(TARGETS tcp_bench_server tcp_bench_client
+                tcp_bench_server_multi tcp_bench_client_multi
         RUNTIME DESTINATION bin)
 
 message(STATUS "tcpip_benchmark: configured (C++23, ${CMAKE_BUILD_TYPE})")
