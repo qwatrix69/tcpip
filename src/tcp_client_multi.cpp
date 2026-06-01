@@ -106,8 +106,8 @@ int main(int argc, char** argv)
 
     // Shared measurement window (all channels aligned)
     auto wall_start    = std::chrono::steady_clock::now();
-    auto measure_start = wall_start + std::chrono::duration<double>(cfg.warmup_sec);
-    auto measure_end   = measure_start + std::chrono::duration<double>(cfg.duration_sec);
+    auto measure_start = wall_start + std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(cfg.warmup_sec));
+    auto measure_end   = measure_start + std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(cfg.duration_sec));
 
     std::vector<ChannelStats> stats(channels);
     CpuSnapshot cpu_before = read_cpu_snapshot();
